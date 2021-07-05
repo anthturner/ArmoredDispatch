@@ -1,5 +1,5 @@
 ![ArmoredDispatch Logo](docs/logo_transparent.png)
-**ArmoredDispatch** is an extension for [MassTransit](https://www.masstransit.com) which uses [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/) to enhance MassTransit's message security using keys stored in a hosted Key Vault.
+**ArmoredDispatch** is an extension for [MassTransit](https://masstransit-project.com/) which uses [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/) to enhance MassTransit's message security using keys stored in a hosted Key Vault.
 
 # Using the Extension
 An example of adding this extension to MassTransit when used in the dependency injection mode follows:
