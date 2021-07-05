@@ -41,13 +41,17 @@ namespace MassTransit.Extensions.ArmoredDispatch.Encryption
             var keyId = _config.GetKeyIdFromDestination(sendContext.DestinationAddress);
 
             // Use default AES to generate key (MassTransit uses AES-256)
-            var aes = Aes.Create();
-            aes.KeySize = 256;
-            aes.GenerateKey();
+            byte[] generatedKey;
+            using (var aes = Aes.Create())
+            {
+                aes.KeySize = 256;
+                aes.GenerateKey();
+                generatedKey = aes.Key;
+            }
 
             // wrap a copy of the key for embedding
             var cryptoClient = new CryptographyClient(keyId, _config.Credential);
-            var wrapped = cryptoClient.WrapKey(_config.KeyWrapAlgorithm, aes.Key);
+            var wrapped = cryptoClient.WrapKey(_config.KeyWrapAlgorithm, generatedKey);
 
             var serialized = JsonSerializer.Serialize(new WrappedKeyPayload()
             {
@@ -57,7 +61,7 @@ namespace MassTransit.Extensions.ArmoredDispatch.Encryption
             sendContext.Headers.Set("kv-key", serialized);            
 
             // return actual key
-            return aes.Key;
+            return generatedKey;
         }
 
         public void Probe(ProbeContext context)
